@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tour Programme/Leave</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .top-header {
+      background-color: #005b8f;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+    }
+
+    .top-header img {
+      height: 60px;
+    }
+
+    .top-header h1 {
+      flex-grow: 1;
+      text-align: center;
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .btn-login {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-login:hover {
+      background-color: #218838;
+    }
+
+    .filter-box {
+      background-color: white;
+      margin: 20px auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 95%;
+      max-width: 1100px;
+      overflow: hidden;
+    }
+
+    .filter-box .title {
+      background-color: #4178b8;
+      color: white;
+      padding: 10px 15px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .filter-content {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 15px;
+      flex-wrap: wrap;
+    }
+
+    .filter-content input[type="date"] {
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .filter-content button {
+      padding: 8px 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-show {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-clear {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tr.today {
+      background-color: #90ee90;
+    }
+
+    tr.tomorrow {
+      background-color: #ffff99;
+    }
+
+    tr.future {
+      background-color: #eee;
+    }
+
+    .leave-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 15px 10px;
+      flex-wrap: wrap;
+    }
+
+    .leave-box {
+      display: flex;
+      align-items: center;
+      border: 1px solid #444;
+      padding: 5px 10px;
+      border-radius: 5px;
+      min-width: 140px;
+      font-size: 13px;
+      background-color: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-indicator {
+      width: 12px;
+      height: 12px;
+      margin-right: 8px;
+      border: 1px solid #aaa;
+      border-radius: 2px;
+    }
+
+    .today    { background-color: lightgreen; }
+    .tomorrow { background-color: yellow; }
+    .future   { background-color: lightgray; }
+    .past     { background-color: transparent; }
+  </style>
+</head>
+<body>
+
+<div class="top-header">
+  <img src="https://2.bp.blogspot.com/-uk86V6JIxWg/TzaJiXXwCxI/AAAAAAAAECk/nW0774OIn80/s1600/indian_railway_logo.jpg" alt="Logo">
+  <h1>पूर्व तट रेलवे<br>( EAST COAST RAILWAY )</h1>
+  <a href="login.html"><button class="btn-login">Login</button></a>
+</div>
+
+<div class="filter-box">
+  <div class="title">Tour Programme/Leave</div>
+  <div class="filter-content">
+    <label for="from">From Date:</label>
+    <input type="date" id="from">
+    <label for="to">To Date:</label>
+    <input type="date" id="to">
+    <a href="SHOW.html"><button class="btn-show">SHOW</button></a>
+    <button class="btn-clear" onclick="clearDates()">CLEAR</button>
+
+  </div>
+
+  <table>
+    <tr>
+      <th>Officer</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Out To</th>
+      <th>Duty/Leave</th>
+      <th>Purpose</th>
+    </tr>
+    <tr class="today">
+      <td>CWE</td>
+      <td>25-05-2025 00:00:00</td>
+      <td>02-06-2025 23:59:00</td>
+      <td>THAILAND</td>
+      <td>Leave</td>
+      <td>Availing Ex.India Leave.</td>
+    </tr>
+    <tr class="today">
+      <td>CE/SD</td>
+      <td>31-05-2025 00:00:00</td>
+      <td>08-06-2025 23:59:00</td>
+      <td>--</td>
+      <td>Leave</td>
+      <td>Availing Leave (L/A : CPDE)</td>
+    </tr>
+    <tr class="today">
+      <td>CSTE/Project</td>
+      <td>31-05-2025 00:00:00</td>
+      <td>02-06-2025 17:30:00</td>
+      <td>VZM</td>
+      <td>Duty</td>
+      <td>PNI-NI of VZM</td>
+    </tr>
+    <tr class="today">
+      <td>CRSE/Frt.</td>
+      <td>31-05-2025 00:00:00</td>
+      <td>08-06-2025 23:59:00</td>
+      <td>--</td>
+      <td>Leave</td>
+      <td>Availing Leave.</td>
+    </tr>
+    <tr class="today">
+      <td>PCMD</td>
+      <td>01-06-2025 13:20:00</td>
+      <td>03-06-2025 12:40:00</td>
+      <td>NDLS</td>
+      <td>Duty</td>
+      <td>To attend PCMDs Annual Performance Rev. Meeting in Rly. Bd.</td>
+    </tr>
+    <tr class="today">
+      <td>CTPM</td>
+      <td>01-06-2025 18:55:00</td>
+      <td>03-06-2025 22:15:00</td>
+      <td>NDLS</td>
+      <td>Duty</td>
+      <td>To attend meeting in Rly. Board.</td>
+    </tr>
+    <tr class="today">
+      <td>PCSC</td>
+      <td>02-06-2025 07:53:00</td>
+      <td>04-06-2025 23:55:00</td>
+      <td>VSKP/CHE</td>
+      <td>Duty</td>
+      <td>Mtg. with DRM/WAT, Attending Suraksha Samellan & Inspn.</td>
+    </tr>
+    <tr class="future">
+      <td>PCSC</td>
+      <td>06-06-2025 00:00:00</td>
+      <td>06-06-2025 23:59:00</td>
+      <td>KUR</td>
+      <td>Duty</td>
+      <td>Attending Suraksha Samellan & Inspection.</td>
+    </tr>
+  </table>
+
+  <div class="leave-bar">
+    <div class="leave-box">
+      <div class="color-indicator today"></div>
+      On Duty/Leave (Today)
+    </div>
+    <div class="leave-box">
+      <div class="color-indicator tomorrow"></div>
+      Duty/Leave (Tomorrow)
+    </div>
+    <div class="leave-box">
+      <div class="color-indicator future"></div>
+      Future Duty/Leave
+    </div>
+    <div class="leave-box">
+      <div class="color-indicator past"></div>
+      Past Duty/Leave
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
