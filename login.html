@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Railways Event Management</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      /* background: url('train_background.jpg') no-repeat center center fixed; */
+      background-size: cover;
+    }
+
+    header {
+      position: relative;
+      height: 120px;
+      padding: 10px 20px;
+      background-color: rgba(0, 51, 102, 0.95);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    header img {
+      height: 100px;
+      position: absolute;
+      top: 30px;
+      left: 20px;
+      margin-bottom: 20px;
+    }
+
+    header .titles {
+      text-align: center;
+    }
+
+    header .titles h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    header .titles h2 {
+      margin: 5px 0 0;
+      font-size: 18px;
+      color: white;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      width: 80px;
+      height: 40px;
+      font-size: 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 20px;
+      margin-top: 80px;
+    }
+
+    .logout-btn:hover {
+      background-color: #218838;
+    }
+
+    #login-screen, #admin-panel, #user-view {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      text-align: center;
+      color: #003366;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0055a5;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #f2f2f2;
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      background-color: rgba(0, 51, 102, 0.95);
+      color: white;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="InidanRailwaysLogo.png" alt="Indian Railways Logo" height="300"            width="150">
+
+    <div class="titles">
+      <h1>पूर्वी तट रेलवे</h1>
+      <h2> (East Coast Railways) </h2>
+      
+    </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
+
+  <div id="login-screen">
+    <h2>Railways Admin Login</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p id="login-error" class="error"></p>
+  </div>
+
+  <div id="admin-panel" class="hidden">
+    <h2>Admin Panel</h2>
+    <input type="text" id="event-title" placeholder="Event Title" />
+    <input type="text" id="event-date" placeholder="Event Date" />
+    <button onclick="addEvent()">Add Event</button>
+    <ul id="event-list"></ul>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <div id="user-view" class="hidden">
+    <h2>Upcoming Events</h2>
+    <ul id="user-event-list"></ul>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <footer>
+    POWERED BY: IT CENTRE/BBS/HQ
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
