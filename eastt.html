@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Appointments & Meetings</title>
+  <link rel="stylesheet" href="eastt.css" />
+</head>
+<body>
+  <div class="header">
+    <div>
+      <img src="east.jpg" alt="Rail Logo" style="height: 60px;" />
+      <h1 पूर्व तट रेलवे <br> ( EAST COAST RAILWAY )></h1>
+    </div>
+    <a href="logout.html">
+      <button class="btn-logout">Logout</button>
+    </a>
+  </div>
+
+  <div class="container">
+    <h2>Appointments & Meetings</h2>
+    <div class="date-filters">
+      <label>From Date: <input type="date" /></label>
+      <label>To Date: <input type="date" /></label>
+      <button>SHOW</button>
+      <button>CLEAR</button>
+    </div>
+
+    <a href="Add New Appointment.html"><button class="add-btn">Add New Appointment</button></a>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Appointment / Meeting Date</th>
+          <th>Appointment / Meeting Time</th>
+          <th>Appointment / Meeting With</th>
+          <th>Designation</th>
+          <th>Purpose</th>
+          <th>Venue</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="today">
+          <td>02-06-2025</td>
+          <td>15:30:00</td>
+          <td>--</td>
+          <td>All PHODs & DRMs (through VC)</td>
+          <td>Weekly Safety & Rev. Mtg.</td>
+          <td>Chintan Kaksh.</td>
+          <td><button class="edit-btn">✎</button></td>
+        </tr>
+        <tr class="tomorrow">
+          <td>03-06-2025</td>
+          <td>15:30:00</td>
+          <td>-----</td>
+          <td>-----</td>
+          <td>Sfty. Rev. Mtg. by CRB&CEO through VC.</td>
+          <td>Chintan Kaksha</td>
+          <td><button class="edit-btn">✎</button></td>
+        </tr>
+        <tr class="other">
+          <td>05-06-2025</td>
+          <td>11:00:00</td>
+          <td>---</td>
+          <td>--</td>
+          <td>Chief Guest at AGM-2025 of ECoRSU</td>
+          <td>CUTTACK</td>
+          <td><button class="edit-btn">✎</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="legend">
+      <label><span class="box today"></span> Today</label>
+      <label><span class="box tomorrow"></span> Tomorrow</label>
+      <label><span class="box other"></span> Other Days</label>
+    </div>
+  </div>
+</body>
+</html>
