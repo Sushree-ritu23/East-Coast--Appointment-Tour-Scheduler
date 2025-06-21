@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Appointment</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+    }
+    .header {
+      background-color: #245269;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+    }
+    .header img {
+      height: 60px;
+    }
+    .header .title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .logout-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .page-title {
+      text-align: center;
+      font-size: 20px;
+      background-color: #005f86;
+      color: white;
+      margin: 20px auto 0;
+      padding: 10px;
+      border-radius: 4px;
+      max-width: 580px;
+      width: 95%;
+      font-weight: 600;
+    }
+    .form-container {
+      background-color: #E3F2DB;
+      max-width: 600px;
+      margin: 0 auto 30px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+    label { font-weight: bold; }
+    .row { display: flex; justify-content: space-between; }
+    .row > div { flex: 0 0 48%; }
+    .btn-container {
+      margin-top: 15px;
+      text-align: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: #31708f;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover { background-color: #245269; }
+    .footer {
+      background-color: #005f86;
+      color: white;
+      font-size: 12px;
+      text-align: center;
+      padding: 10px 0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="logo1.png" />
+    <div class="title">पूर्व तट रेलवे<br>( EAST COAST RAILWAY )</div>
+    <button onclick="logout()" class="logout-btn">Logout</button>
+  </div>
+
+  <div class="page-title">Appointments & Meetings</div>
+
+  <div class="form-container">
+    <form id="meetingForm">
+      <label for="date">Appointment / Meeting Date:</label>
+      <input type="date" id="date" required>
+
+      <label for="time">Appointment / Meeting Time:</label>
+      <input type="time" id="time" required>
+
+      <label for="person">Appointment / Meeting With:</label>
+      <input type="text" id="person" required placeholder="Enter Name">
+
+      <label for="designation">Designation:</label>
+      <input type="text" id="designation" required placeholder="Enter Designation">
+
+      <label for="purpose">Purpose:</label>
+      <textarea id="purpose" required placeholder="Enter Purpose" rows="3"></textarea>
+
+      <div class="row">
+        <div>
+          <label for="venue">Venue:</label>
+          <input type="text" id="venue" required placeholder="Enter Venue">
+        </div>
+        <div style="margin-top: 32px;">
+          <label for="vip">Is VIP?</label>
+          <input type="checkbox" id="vip">
+        </div>
+      </div>
+
+      <div class="btn-container">
+        <button type="submit">SUBMIT</button>
+        <button type="reset">CLEAR</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="footer">POWERED BY: IT CENTRE/BBS/HQ</div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB8Z1PO89S5RxyQwtzSmF0wBzqXJVsCwQc",
+      authDomain: "erc-appt-and-tour-scheduler.firebaseapp.com",
+      databaseURL: "https://erc-appt-and-tour-scheduler-default-rtdb.asia-southeast1.firebasedatabase.app/",
+      projectId: "erc-appt-and-tour-scheduler",
+      storageBucket: "erc-appt-and-tour-scheduler.appspot.com",
+      messagingSenderId: "607185744541",
+      appId: "1:607185744541:web:7015503e3c6f3385861a74"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const editId = localStorage.getItem("editId");
+    if (editId) {
+      firebase.database().ref('appointments/' + editId).once('value').then(snapshot => {
+        const data = snapshot.val();
+        if (data) {
+          document.getElementById('date').value = data.date || '';
+          document.getElementById('time').value = data.time || '';
+          document.getElementById('person').value = data.person || '';
+          document.getElementById('designation').value = data.designation || '';
+          document.getElementById('purpose').value = data.purpose || '';
+          document.getElementById('venue').value = data.venue || '';
+          document.getElementById('vip').checked = data.vip || false;
+        }
+      });
+    }
+
+    document.getElementById("meetingForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const appointment = {
+        date: document.getElementById("date").value,
+        time: document.getElementById("time").value,
+        person: document.getElementById("person").value,
+        designation: document.getElementById("designation").value,
+        purpose: document.getElementById("purpose").value,
+        venue: document.getElementById("venue").value,
+        vip: document.getElementById("vip").checked
+      };
+
+      const ref = editId ? db.ref("appointments/" + editId) : db.ref("appointments").push();
+      ref.set(appointment).then(() => {
+        localStorage.removeItem("editId");
+        window.location.href = "apptafteredit.html";
+      });
+    });
+
+    function logout() {
+      window.location.href = "apptindex.html";
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+         body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+    }
+    .header {
+      background-color: #245269;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+    }
+    .header .title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align:center;
+    }
+    .header img {
+      height: 60px;
+    }
+    .logout-btn {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 20px;
+    }
+    .login-box {
+  background: white;
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px 25px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.login-box h2 {
+  color: #003366;
+  margin-bottom: 20px;
+}
+
+.login-box input[type="text"],
+.login-box input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.login-box button:hover {
+  background-color: #0055a5;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #003366;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+    }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="logo1.png">
+        <div class="title">
+          पूर्व तट रेलवे<br>( EAST COAST RAILWAY )
+        </div>
+        <button onclick = "logout()" class="logout-btn">Logout</button>
+      </div>
+      <div class="login-box">
+        <h2>Admin Login</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+        <p id="login-error" class="error"></p>
+      </div>
+      
+    
+      <footer>
+        POWERED BY: IT CENTRE/BBS/HQ
+      </footer>
+    
+      <script>
+        const ADMIN_USERS = [
+          { username: "Ritureshma", password: "Ritu@123" },
+          { username: "Sugyani", password: "Sugyani@123" },
+          { username: "Pradestha", password: "Pradestha@123" },
+          { username: "Subhashree", password: "Subha@123" },
+          { username: "Sriprita", password: "Sriprita@123" },
+          { username: "Priyanka", password: "Priyanka@123" },
+          { username: "Raghuveer", password: "Raghuveer@123" }
+        ];
+    
+        function login() {
+          const username = document.getElementById("username").value.trim();
+          const password = document.getElementById("password").value.trim();
+          const errorMsg = document.getElementById("login-error");
+    
+          const isAdmin = ADMIN_USERS.some(u => u.username === username && u.password === password);
+    
+          if (isAdmin) {
+            window.location.href = "apptindex2.html";
+          } else {
+            errorMsg.textContent = "Access Unauthorized: Invalid credentials.";
+          }
+        }
+    
+        function logout() {
+          window.location.href = "apptindex.html";
+        }
+      </script>
+    
+</body>
+</html>
