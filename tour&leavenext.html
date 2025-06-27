@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>East Coast Railway - Tour Programme/Leave</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #065c91;
+      color: white;
+      padding: 10px 20px;
+    }
+
+    .logo {
+      width: 60px;
+    }
+
+    .title {
+      text-align: center;
+      flex: 1;
+    }
+
+    .logout {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 90%;
+      margin: 20px auto;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .card-header {
+      background: #2b6dad;
+      color: white;
+      padding: 10px;
+    }
+
+    .filter-bar {
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .add-btn {
+      background-color: #4CAF50;
+      margin-left: auto;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    tbody tr.today {
+      background-color: #b2f7b2;
+    }
+
+    tbody tr.tomorrow {
+      background-color: #ffff99;
+    }
+
+    tbody tr.future {
+      background-color: #cce5ff;
+    }
+
+    tbody tr.past {
+      background-color: #f7cccc;
+    }
+
+    .legend {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+    }
+
+    .legend .item {
+      display: flex;
+      align-items: center;
+      border: 1px solid #555;
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+
+    .dot {
+      width: 15px;
+      height: 15px;
+      margin-right: 8px;
+      display: inline-block;
+      border: 1px solid #333;
+    }
+
+    .today { background-color: #b2f7b2; }
+    .tomorrow { background-color: #ffff99; }
+    .future { background-color: #cce5ff; }
+    .past { background-color: #f7cccc; }
+
+    .footer-bar {
+      background-color: #003b5c;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="IndianRailwaysLogo.png" alt="IR Logo" class="logo" />
+    <div class="title">
+      <h2>पूर्व तट रेलवे</h2>
+      <h3>( EAST COAST RAILWAY )</h3>
+    </div>
+    <button class="logout">Logout</button>
+  </header>
+
+  <main style="flex:1">
+    <div class="card">
+      <div class="card-header">
+        <h3>Tour Programme/Leave</h3>
+      </div>
+      <div class="filter-bar">
+        <label>From Date:
+          <input type="date" id="fromDate" />
+        </label>
+        <label>To Date:
+          <input type="date" id="toDate" />
+        </label>
+        <button onclick="filterData()">SHOW</button>
+        <button onclick="clearFilter()">CLEAR</button>
+        <button class="add-btn">Add Tour Program/Leave</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Officer:</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Out To</th>
+            <th>Duty/Leave</th>
+            <th>Purpose</th>
+            <th>Edit</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="legend">
+        <div class="item"><span class="dot today"></span> On Duty/Leave (Today)</div>
+        <div class="item"><span class="dot tomorrow"></span> Duty/Leave (Tomorrow)</div>
+        <div class="item"><span class="dot future"></span> Future Duty/Leave</div>
+        <div class="item"><span class="dot past"></span> Past Duty/Leave</div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ✅ Footer Added Below -->
+  <footer class="footer-bar">
+    POWERED BY : IT CENTRE/BBS/HQ
+  </footer>
+
+  <script>
+    const tableData = [
+      {
+        officer: "CWE",
+        from: "2025-05-25T00:00",
+        to: "2025-06-02T23:59",
+        outTo: "THAILAND.",
+        type: "Leave",
+        purpose: "Availing Ex.India Leave."
+      },
+      {
+        officer: "PCSC",
+        from: "2025-07-10T09:00",
+        to: "2025-07-12T18:00",
+        outTo: "NDLS",
+        type: "Duty",
+        purpose: "Meeting with Railway Board"
+      },
+      {
+        officer: "CRSE",
+        from: "2025-07-01T00:00",
+        to: "2025-07-04T23:59",
+        outTo: "VSKP",
+        type: "Leave",
+        purpose: "Vacation Leave"
+      },
+      {
+        officer: "CSTE/Project",
+        from: "2025-07-02T00:00",
+        to: "2025-07-02T17:00",
+        outTo: "BBS",
+        type: "Duty",
+        purpose: "Inspn. of Telecom Section"
+      }
+    ];
+
+    function renderTable(data) {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+
+      const today = new Date().toISOString().split("T")[0];
+      const tomorrow = new Date();
+      tomorrow.setDate(new Date().getDate() + 1);
+      const tmrStr = tomorrow.toISOString().split("T")[0];
+
+      data.forEach(item => {
+        const tr = document.createElement("tr");
+        const fromDate = item.from.split("T")[0];
+
+        if (fromDate === today) tr.classList.add("today");
+        else if (fromDate === tmrStr) tr.classList.add("tomorrow");
+        else if (fromDate > today) tr.classList.add("future");
+        else tr.classList.add("past");
+
+        tr.innerHTML = `
+          <td>${item.officer}</td>
+          <td>${item.from.replace("T", " ")}</td>
+          <td>${item.to.replace("T", " ")}</td>
+          <td>${item.outTo}</td>
+          <td>${item.type}</td>
+          <td>${item.purpose}</td>
+          <td><button>✏️</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterData() {
+      const from = new Date(document.getElementById("fromDate").value);
+      const to = new Date(document.getElementById("toDate").value);
+
+      if (!from || !to || isNaN(from) || isNaN(to)) {
+        alert("Please select both dates!");
+        return;
+      }
+
+      const filtered = tableData.filter(item => {
+        const itemStart = new Date(item.from);
+        const itemEnd = new Date(item.to);
+        return itemEnd >= from && itemStart <= to;
+      });
+
+      renderTable(filtered);
+    }
+
+    function clearFilter() {
+      document.getElementById("fromDate").value = "";
+      document.getElementById("toDate").value = "";
+      renderTable(tableData);
+    }
+
+    window.onload = () => renderTable(tableData);
+  </script>
+</body>
+</html>
