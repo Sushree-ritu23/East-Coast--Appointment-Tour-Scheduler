@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>East Coast Railway - Scheduling Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --header-blue: #1a4b6d;
+            --dark-blue: #002b4e;
+            --button-green: #4CAF50;
+            --today-bg: #8cd790;
+            --tomorrow-bg: #ffe04d;
+            --future-bg: #b8d8eb;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --focus-blue: rgba(36, 82, 105, 0.2);
+            --light-bg: #f0f5f9;
+            --form-bg: #E3F2DB;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+            background-image: linear-gradient(rgba(240,245,249,0.6)), 
+                             url('https://cag.gov.in/webroot/uploads/FileManager/photo2.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center 30%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--header-blue);
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            height: clamp(50px, 8vw, 65px);
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));
+            margin: 5px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .title {
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 0.5px;
+            margin: 10px 15px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .nav-btn {
+            background-color: var(--button-green);
+            color: white;
+            border: none;
+            padding: clamp(8px, 2vw, 9px) clamp(12px, 3vw, 18px);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 8px 6px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            font-size: clamp(14px, 2vw, 16px);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn:hover {
+            background-color: #3d8b40;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .nav-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .hero {
+            max-width: min(90%, 1000px);
+            margin: 5vh auto;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            color: var(--dark-blue);
+            font-size: clamp(24px, 5vw, 36px);
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            line-height: 1.3;
+        }
+
+        .hero p {
+            color: #444;
+            font-size: clamp(16px, 2.5vw, 18px);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            padding: 0 10px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+            gap: 25px;
+            max-width: min(90%, 1000px);
+            margin: 0 auto 50px;
+            padding: 0 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: clamp(20px, 3vw, 28px);
+            box-shadow: 0 4px 12px rgba(0,76,118,0.15);
+            border: 2px solid #005f86;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 20px rgba(0,76,118,0.2);
+            border-color: #0082b3;
+        }
+
+        .card-icon {
+            font-size: clamp(32px, 6vw, 40px);
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1);
+        }
+
+        .card h2 {
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+            font-size: clamp(18px, 3vw, 22px);
+        }
+
+        .card p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: clamp(14px, 2vw, 16px);
+            flex-grow: 1;
+        }
+
+        .card-btn {
+            display: inline-block;
+            background-color: var(--dark-blue);
+            color: white;
+            padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 22px);
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+            font-size: clamp(14px, 2vw, 16px);
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-btn:hover {
+            background-color: #0055a5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .card-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .card-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        .status-indicators {
+            display: flex;
+            justify-content: center;
+            gap: clamp(10px, 3vw, 20px);
+            margin: 30px auto;
+            flex-wrap: wrap;
+            max-width: min(90%, 1000px);
+            padding: 0 20px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            font-size: clamp(12px, 2vw, 14px);
+            background-color: rgba(255,255,255,0.8);
+            padding: 6px 12px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .status-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .status-box {
+            width: clamp(14px, 3vw, 18px);
+            height: clamp(14px, 3vw, 18px);
+            margin-right: 6px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            transition: transform 0.3s ease;
+        }
+
+        .status-item:hover .status-box {
+            transform: scale(1.1);
+        }
+
+        .today-box { background-color: var(--today-bg); border-color: #7fd17a; }
+        .tomorrow-box { background-color: var(--tomorrow-bg); border-color: #e6e05e; }
+        .future-box { background-color: var(--future-bg); border-color: #b8d8eb; }
+
+        .footer {
+            background-color: var(--dark-blue);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: clamp(12px, 2vw, 14px);
+            width: 100%;
+            margin-top: auto;
+        }
+
+        /* Floating animation for hero section */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .hero:hover {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 5%;
+                justify-content: center;
+            }
+            
+            .title {
+                min-width: 100%;
+                order: 2;
+                margin: 5px 0 10px;
+            }
+            
+            .hero {
+                margin: 3vh auto;
+                padding: 15px;
+            }
+            
+            .hero h1 {
+                margin-bottom: 15px;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 0 15px;
+            }
+            
+            .nav-btn {
+                margin: 5px;
+                padding: 8px 15px;
+            }
+            
+            .status-indicators {
+                gap: 10px;
+                justify-content: space-around;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 22px;
+            }
+            
+            .hero p {
+                font-size: 15px;
+            }
+            
+            .card {
+                padding: 18px;
+            }
+            
+            .status-item {
+                padding: 5px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="https://www.vhv.rs/dpng/d/398-3987834_indian-railways-logo-hd-png-download.png" alt="Indian Railways Logo" class="logo">
+        <div class="title">
+            पूर्व तट रेलवे<br>( EAST COAST RAILWAY )
+        </div>
+        <div>
+            <button class="nav-btn" onclick="window.location.href='login1.html'">Login</button>
+            <button class="nav-btn" onclick="window.location.href='apptindex.html'">Public View</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Railway Scheduling Management System</h1>
+        <p>Comprehensive platform for managing appointments, meetings, and tour programs of East Coast Railway officials. Streamline your scheduling with our integrated solution.</p>
+    </section>
+
+    <div class="dashboard">
+        <div class="card" style="animation-delay: 0.1s">
+            <div class="card-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h2>Appointments & Meetings</h2>
+            <p>View and manage all scheduled appointments and meetings. Track daily schedules and important engagements.</p>
+            <a href="apptindex2.html" class="card-btn">View Appointments</a>
+        </div>
+
+        <div class="card" style="animation-delay: 0.2s">
+            <div class="card-icon">
+                <i class="fas fa-train"></i>
+            </div>
+            <h2>Tour Programme/Leave</h2>
+            <p>Access tour schedules and leave applications of railway officials across all divisions.</p>
+            <a href="appttour&leave.html" class="card-btn">View Tours</a>
+        </div>
+
+        <div class="card" style="animation-delay: 0.3s">
+            <div class="card-icon">
+                <i class="fas fa-user-cog"></i>
+            </div>
+            <h2>Administration</h2>
+            <p>Authorized access to add, edit, and manage all scheduling entries in the system.</p>
+            <a href="login1.html" class="card-btn">Admin Login</a>
+        </div>
+    </div>
+
+    <div class="status-indicators">
+        <div class="status-item">
+            <div class="status-box today-box"></div>
+            Today's Events
+        </div>
+        <div class="status-item">
+            <div class="status-box tomorrow-box"></div>
+            Tomorrow's Events
+        </div>
+        <div class="status-item">
+            <div class="status-box future-box"></div>
+            Future Events
+        </div>
+    </div>
+
+    <footer class="footer">
+        POWERED BY: IT CENTRE/BBS/HQ
+    </footer>
+
+    <script>
+        // Animate cards on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                    card.style.animation = 'fadeInUp 0.5s ease-out forwards';
+                }, 150 * index);
+            });
+            
+            // Add hover effect to status items
+            const statusItems = document.querySelectorAll('.status-item');
+            statusItems.forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    item.style.transform = 'translateY(-3px)';
+                    item.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                });
+                item.addEventListener('mouseleave', () => {
+                    item.style.transform = 'translateY(0)';
+                    item.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                });
+            });
+        });
+
+        // Add fadeInUp animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
