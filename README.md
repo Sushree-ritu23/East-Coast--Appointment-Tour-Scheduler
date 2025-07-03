@@ -27,3 +27,12 @@ A role-based scheduling system where admins manage and clients view appointments
 - Only authorized admins can modify schedule data
 - Firebase ensures secure real-time data sync and authentication
 - Redirection for session confirmation and control
+
+  ## 🚀 Getting Started
+
+To run the project locally:
+
+1. Clone the repository  
+   ```bash
+   git clone https://github.com/Sushree-ritu23/East_coast-MTMS.git
+
