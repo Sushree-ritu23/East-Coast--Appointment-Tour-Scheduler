@@ -35,4 +35,12 @@ To run the project locally:
 1. Clone the repository  
    ```bash
    git clone https://github.com/Sushree-ritu23/East_coast-MTMS.git
+2. Open index.html in a browser to preview
+3. Connect your Firebase credentials in the JavaScript config file
+
+## 🌐 Live Project
+
+You can access the live version of this project here:  
+🔗 https://sushree-ritu23.github.io/East_coast-MTMS/
+
 
