@@ -4,147 +4,466 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Admin Login - East Coast Railway</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-         body {
-      font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-      margin: 0;
-    }
-    .header {
-      background-color: #245269;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-    }
-    .header .title {
-      font-size: 24px;
-      font-weight: bold;
-      text-align:center;
-    }
-    .header img {
-      height: 60px;
-    }
-    .logout-btn {
-      background-color: #4CAF50;
-      color: white;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-left: 20px;
-    }
-    .login-box {
-  background: white;
-  max-width: 400px;
-  margin: 60px auto;
-  padding: 30px 25px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  text-align: center;
-}
+        :root {
+            --primary-blue: #245269;
+            --dark-blue: #003366;
+            --button-green: #4CAF50;
+            --error-red: #e74c3c;
+            --light-gray: #f7f7f7;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --focus-blue: rgba(36, 82, 105, 0.2);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: linear-gradient(rgba(247, 247, 247, 0.5)),url('https://cag.gov.in/webroot/uploads/FileManager/photo2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
 
-.login-box h2 {
-  color: #003366;
-  margin-bottom: 20px;
-}
+        .header {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 
-.login-box input[type="text"],
-.login-box input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  font-size: 14px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
+        .header .title {
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 15px;
+            flex: 1;
+            min-width: 200px;
+        }
 
-.login-box button {
-  width: 100%;
-  padding: 10px;
-  background-color: #003366;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 14px;
-}
+        .header img {
+            height: clamp(50px, 8vw, 60px);
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+        }
 
-.login-box button:hover {
-  background-color: #0055a5;
-}
+        .logout-btn {
+            background-color: var(--button-green);
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
 
-.error {
-  color: red;
-  margin-top: 10px;
-}
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 20px;
+        }
 
-    footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background-color: #003366;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      font-size: 14px;
-    }
+        .login-box {
+            background: var(--white);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+            border-top: 5px solid var(--primary-blue);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-box h2 {
+            color: var(--dark-blue);
+            margin-bottom: 25px;
+            font-size: 28px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .login-box h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-blue);
+            animation: underlinePulse 2s infinite;
+        }
+
+        @keyframes underlinePulse {
+            0% { width: 50px; }
+            50% { width: 70px; }
+            100% { width: 50px; }
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-blue);
+            font-weight: 600;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .input-group.focused label {
+            color: var(--primary-blue);
+            transform: translateY(-5px);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            transition: all 0.3s;
+            background-color: var(--white);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px var(--focus-blue);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .input-group input:not(:placeholder-shown) {
+            background-color: #f8fdfe;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 1rem;
+            height: 1rem;
+            line-height: 1;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary-blue);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover {
+            background-color: #1a3d4d;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .login-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .error {
+            color: var(--error-red);
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s ease;
+        }
+
+        .error.show {
+            transform: scaleY(1);
+        }
+
+        footer {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        /* Floating animation for form */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .login-box:hover {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header {
+                padding: 10px 5%;
+                justify-content: center;
+            }
+            
+            .header .title {
+                min-width: 100%;
+                order: 2;
+                margin: 5px 0 10px;
+            }
+            
+            .login-box {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 25px 15px;
+            }
+            
+            .login-box h2 {
+                font-size: 24px;
+            }
+            
+            .input-group input {
+                padding: 10px 35px 10px 12px;
+            }
+            
+            .password-toggle {
+                right: 10px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <img src="logo1.png">
+        <img src="https://www.vhv.rs/dpng/d/398-3987834_indian-railways-logo-hd-png-download.png" alt="Indian Railways Logo">
         <div class="title">
           पूर्व तट रेलवे<br>( EAST COAST RAILWAY )
         </div>
-        <button onclick = "logout()" class="logout-btn">Logout</button>
-      </div>
-      <div class="login-box">
-        <h2>Admin Login</h2>
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button onclick="login()">Login</button>
-        <p id="login-error" class="error"></p>
-      </div>
+        <button onclick="logout()" class="logout-btn">Logout</button>
+    </div>
       
-    
-      <footer>
+    <div class="login-container">
+        <div class="login-box">
+            <h2>Admin Login</h2>
+            <div class="input-group" id="usernameGroup">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+            </div>
+            <div class="input-group" id="passwordGroup">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <button onclick="login()" class="login-btn">Login</button>
+            <p id="login-error" class="error"></p>
+        </div>
+    </div>
+      
+    <footer>
         POWERED BY: IT CENTRE/BBS/HQ
-      </footer>
+    </footer>
     
-      <script>
+    <script>
         const ADMIN_USERS = [
-          { username: "Ritureshma", password: "Ritu@123" },
-          { username: "Sugyani", password: "Sugyani@123" },
-          { username: "Pradestha", password: "Pradestha@123" },
-          { username: "Subhashree", password: "Subha@123" },
-          { username: "Sriprita", password: "Sriprita@123" },
-          { username: "Priyanka", password: "Priyanka@123" },
-          { username: "Raghuveer", password: "Raghuveer@123" }
+            { username: "Ritureshma", password: "Ritu@123" },
+            { username: "Sugyani", password: "Sugyani@123" },
+            { username: "Pradestha", password: "Pradestha@123" },
+            { username: "Subhashree", password: "Subha@123" },
+            { username: "Sriprita", password: "Sriprita@123" },
+            { username: "Priyanka", password: "Priyanka@123" },
+            { username: "Raghuveer", password: "Raghuveer@123" }
         ];
+
+        // Password toggle functionality
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const icon = togglePassword.querySelector('i');
+        
+        togglePassword.addEventListener('click', function() {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            
+            // Toggle the eye icon
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        // Add focus/blur effects to input groups
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const usernameGroup = document.getElementById('usernameGroup');
+        const passwordGroup = document.getElementById('passwordGroup');
+        const errorMsg = document.getElementById('login-error');
+
+        usernameInput.addEventListener('focus', () => {
+            usernameGroup.classList.add('focused');
+        });
+
+        usernameInput.addEventListener('blur', () => {
+            if (!usernameInput.value) {
+                usernameGroup.classList.remove('focused');
+            }
+        });
+
+        passwordInput.addEventListener('focus', () => {
+            passwordGroup.classList.add('focused');
+        });
+
+        passwordInput.addEventListener('blur', () => {
+            if (!passwordInput.value) {
+                passwordGroup.classList.remove('focused');
+            }
+        });
+
+        // Pre-focus animation
+        setTimeout(() => {
+            usernameGroup.style.transition = 'all 0.5s ease';
+            passwordGroup.style.transition = 'all 0.5s ease';
+        }, 1000);
     
         function login() {
-          const username = document.getElementById("username").value.trim();
-          const password = document.getElementById("password").value.trim();
-          const errorMsg = document.getElementById("login-error");
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            errorMsg.classList.remove('show');
+            
+            const isAdmin = ADMIN_USERS.some(u => u.username === username && u.password === password);
     
-          const isAdmin = ADMIN_USERS.some(u => u.username === username && u.password === password);
-    
-          if (isAdmin) {
-            window.location.href = "apptindex2.html";
-          } else {
-            errorMsg.textContent = "Access Unauthorized: Invalid credentials.";
-          }
+            if (isAdmin) {
+                localStorage.setItem('isAdmin', 'true');
+                window.location.href = "apptindex2.html";
+            } else {
+                errorMsg.textContent = "Access Unauthorized: Invalid credentials.";
+                errorMsg.classList.add('show');
+                passwordInput.value = "";
+                // Shake animation for error
+                usernameGroup.style.animation = 'shake 0.5s';
+                passwordGroup.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    usernameGroup.style.animation = '';
+                    passwordGroup.style.animation = '';
+                }, 500);
+            }
         }
     
         function logout() {
-          window.location.href = "apptindex.html";
+            localStorage.removeItem('isAdmin');
+            window.location.href = "login1.html";
         }
-      </script>
-    
+
+        // Add keyboard event for Enter key
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+
+        // Add shake animation for errors
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>
