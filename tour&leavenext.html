@@ -1,289 +1,657 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>East Coast Railway - Tour Programme/Leave</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Tour Programme - East Coast Railway</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: white;
+    :root {
+      --primary-blue: #245269;
+      --dark-blue: #003366;
+      --button-green: #4CAF50;
+      --today-bg: #a8e6a3;
+      --tomorrow-bg: #fff475;
+      --future-bg: #d6ecf3;
+      --past-bg: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --focus-blue: rgba(36, 82, 105, 0.2);
+      --form-bg: #E3F2DB;
+    }
+    
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      margin: 0; 
+      background: #f7f7f7;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      background-image: linear-gradient(rgba(247, 247, 247, 0.5)),url('https://cag.gov.in/webroot/uploads/FileManager/photo2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+      
     }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background-color: #065c91;
-      color: white;
-      padding: 10px 20px;
-    }
-
-    .logo {
-      width: 60px;
-    }
-
-    .title {
-      text-align: center;
-      flex: 1;
-    }
-
-    .logout {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .card {
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      width: 90%;
-      margin: 20px auto;
-      overflow: hidden;
-      flex: 1;
-    }
-
-    .card-header {
-      background: #2b6dad;
-      color: white;
-      padding: 10px;
-    }
-
-    .filter-bar {
-      padding: 10px;
-      display: flex;
-      gap: 10px;
+    
+    .header { 
+      background: var(--primary-blue); 
+      color: white; 
+      display: flex; 
       flex-wrap: wrap;
-      align-items: center;
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 15px 20px; 
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-
-    .add-btn {
-      background-color: #4CAF50;
-      margin-left: auto;
+    
+    .header img { 
+      height: clamp(50px, 8vw, 60px); 
+      transition: transform 0.3s ease;
+    }
+    
+    .header img:hover {
+      transform: scale(1.05);
+    }
+    
+    .header .title { 
+      font-size: clamp(18px, 4vw, 24px); 
+      font-weight: bold; 
+      text-align: center; 
+      margin: 10px 15px;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .logout-btn, .nav-btn { 
+      background: var(--button-green); 
+      color: white; 
+      padding: 8px 16px; 
+      border: none; 
+      border-radius: 4px; 
+      cursor: pointer; 
+      font-weight: bold;
+      transition: all 0.3s;
+      box-shadow: var(--shadow);
+      margin: 5px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .logout-btn:hover, .nav-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .logout-btn:active, .nav-btn:active {
+      transform: translateY(0);
+    }
+    
+    .logout-btn::after, .nav-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+    
+    .logout-btn:focus:not(:active)::after, 
+    .nav-btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+    
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+    
+    .page-title-bar { 
+      display: flex; 
+      flex-wrap: wrap;
+      justify-content: space-between; 
+      align-items: center; 
+      background: var(--primary-blue); 
+      color: white; 
+      padding: 10px; 
+      border-radius: 5px; 
+      margin: -25px -20px 8px -20px; 
+      font-size: clamp(16px, 3vw, 20px); 
+      font-weight: 600; 
+      line-height: 1.3; 
+      animation: fadeInDown 0.5s ease-out;
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .form-section { 
+      margin: 30px auto; 
+      padding: 20px; 
+      background: white; 
+      border: 1px solid #004c76; 
+      width: 95%; 
+      max-width: 1200px; 
+      border-radius: 6px; 
+      box-shadow: var(--shadow);
+      flex: 1;
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .filter-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .filter-controls label { 
+      font-weight: bold; 
+      margin-right: 5px; 
+      white-space: nowrap;
+    }
+    
+    .filter-controls input[type="date"] { 
+      padding: 8px; 
+      font-size: 14px; 
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      transition: all 0.3s;
+    }
+    
+    .filter-controls input[type="date"]:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px var(--focus-blue);
+      outline: none;
+      transform: translateY(-1px);
+    }
+    
+    .filter-controls button {
+      padding: 8px 15px;
+      background: var(--primary-blue);
       color: white;
-      padding: 5px 10px;
       border: none;
       border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
     }
-
+    
+    .filter-controls button:hover {
+      background: #1a3d4d;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    
+    .table-container {
+      overflow-x: auto;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      animation: fadeInUp 0.5s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 0;
+      font-size: clamp(12px, 2vw, 14px);
     }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
+    
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 12px; 
+      text-align: left; 
+      transition: background-color 0.3s;
     }
-
-    tbody tr.today {
-      background-color: #b2f7b2;
+    
+    th { 
+      background-color: var(--primary-blue); 
+      color: white; 
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-
-    tbody tr.tomorrow {
-      background-color: #ffff99;
+    
+    tr {
+      transition: all 0.3s ease;
     }
-
-    tbody tr.future {
-      background-color: #cce5ff;
+    
+    tr:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-
-    tbody tr.past {
-      background-color: #f7cccc;
-    }
-
-    .legend {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px;
-    }
-
-    .legend .item {
-      display: flex;
-      align-items: center;
-      border: 1px solid #555;
-      padding: 5px 10px;
-      border-radius: 4px;
-    }
-
-    .dot {
-      width: 15px;
-      height: 15px;
-      margin-right: 8px;
-      display: inline-block;
-      border: 1px solid #333;
-    }
-
-    .today { background-color: #b2f7b2; }
-    .tomorrow { background-color: #ffff99; }
-    .future { background-color: #cce5ff; }
-    .past { background-color: #f7cccc; }
-
-    .footer-bar {
-      background-color: #003b5c;
-      color: white;
+    
+    .today { background-color: var(--today-bg) !important; }
+    .tomorrow { background-color: var(--tomorrow-bg) !important; }
+    .future { background-color: var(--future-bg) !important; }
+    .past { background-color: var(--past-bg) !important; }
+    
+    .action-cell { 
+      width: 100px; 
       text-align: center;
+    }
+    
+    .action-btn {
+      cursor: pointer;
+      margin: 0 5px;
+      font-size: 16px;
+      transition: all 0.3s;
+      background: none;
+      border: none;
+      padding: 8px;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .edit-btn { 
+      color: #005f86; 
+      background-color: rgba(0, 95, 134, 0.1);
+    }
+    
+    .delete-btn { 
+      color: #d9534f; 
+      background-color: rgba(217, 83, 79, 0.1);
+    }
+    
+    .action-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    
+    .edit-btn:hover {
+      background-color: rgba(0, 95, 134, 0.2);
+    }
+    
+    .delete-btn:hover {
+      background-color: rgba(217, 83, 79, 0.2);
+    }
+    
+    .legend { 
+      display: flex; 
+      flex-wrap: wrap;
+      justify-content: center; 
+      gap: 15px; 
+      margin-top: 20px;
       padding: 10px;
-      font-weight: bold;
+      background: white;
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+    }
+    
+    .legend-item {
+      display: flex; 
+      align-items: center; 
+      font-size: 14px; 
+      padding: 6px 12px;
+      border-radius: 20px;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      cursor: default;
+    }
+    
+    .legend-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .legend-box { 
+      width: 18px; 
+      height: 18px; 
+      margin-right: 8px; 
+      border-radius: 3px;
+    }
+    
+    .today-legend { background-color: var(--today-bg); border: 1px solid #7fd17a; }
+    .tomorrow-legend { background-color: var(--tomorrow-bg); border: 1px solid #e6e05e; }
+    .future-legend { background-color: var(--future-bg); border: 1px solid #b8d8eb; }
+    .past-legend { background-color: var(--past-bg); border: 1px solid #ccc; }
+    
+    .footer { 
+      background: var(--dark-blue); 
+      color: white; 
+      text-align: center; 
+      padding: 15px; 
       font-size: 14px;
+      margin-top: auto;
+    }
+    
+    .add-btn {
+      background-color: var(--button-green);
+      color: white;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .add-btn:hover {
+      background-color: #3d8b40;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    
+    .add-btn:active {
+      transform: translateY(0);
+    }
+    
+    .add-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+    
+    .add-btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+    
+    /* Loading animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .header {
+        justify-content: center;
+      }
+      
+      .header .title {
+        min-width: 100%;
+        order: 2;
+        margin: 5px 0 10px;
+      }
+      
+      .page-title-bar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px 10px;
+      }
+      
+      .filter-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .filter-controls button {
+        width: 100%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      th, td {
+        padding: 8px 6px;
+        font-size: 12px;
+      }
+      
+      .action-cell {
+        width: 70px;
+      }
+      
+      .action-btn {
+        margin: 0 3px;
+        font-size: 14px;
+        width: 30px;
+        height: 30px;
+      }
+      
+      .legend {
+        gap: 10px;
+      }
+      
+      .legend-item {
+        font-size: 12px;
+        padding: 3px 6px;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <img src="IndianRailwaysLogo.png" alt="IR Logo" class="logo" />
-    <div class="title">
-      <h2>पूर्व तट रेलवे</h2>
-      <h3>( EAST COAST RAILWAY )</h3>
-    </div>
-    <button class="logout">Logout</button>
-  </header>
+  <!-- Check authentication -->
+  <script>
+    if (!localStorage.getItem('isAdmin')) {
+      window.location.href = 'login1.html';
+    }
+  </script>
 
-  <main style="flex:1">
-    <div class="card">
-      <div class="card-header">
-        <h3>Tour Programme/Leave</h3>
-      </div>
-      <div class="filter-bar">
-        <label>From Date:
-          <input type="date" id="fromDate" />
-        </label>
-        <label>To Date:
-          <input type="date" id="toDate" />
-        </label>
-        <button onclick="filterData()">SHOW</button>
-        <button onclick="clearFilter()">CLEAR</button>
-        <button class="add-btn">Add Tour Program/Leave</button>
-      </div>
+  <div class="header">
+    <img src="https://www.vhv.rs/dpng/d/398-3987834_indian-railways-logo-hd-png-download.png" alt="logo1">
+    <div class="title">पूर्व तट रेलवे<br>( EAST COAST RAILWAY )</div>
+    <div>
+      <button onclick="window.location.href='apptindex2.html'" class="nav-btn">Appointments</button>
+      <button onclick="logout()" class="logout-btn">Logout</button>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="page-title-bar">
+      <div>Tour Programme/Leave</div>
+      <button onclick="goToForm()" class="add-btn">Add New Tour/Leave</button>
+    </div>
+    
+    <div class="filter-controls">
+      <label>From Date: <input type="date" id="fromDate"></label>
+      <label>To Date: <input type="date" id="toDate"></label>
+      <button onclick="filterByDate()">SHOW</button>
+      <button onclick="loadTours()">CLEAR</button>
+    </div>
+
+    <div class="table-container">
       <table>
         <thead>
           <tr>
-            <th>Officer:</th>
+            <th>Officer</th>
             <th>From</th>
             <th>To</th>
             <th>Out To</th>
             <th>Duty/Leave</th>
             <th>Purpose</th>
-            <th>Edit</th>
+            <th class="action-cell">Actions</th>
           </tr>
         </thead>
-        <tbody id="tableBody"></tbody>
+        <tbody id="tourList"></tbody>
       </table>
-      <div class="legend">
-        <div class="item"><span class="dot today"></span> On Duty/Leave (Today)</div>
-        <div class="item"><span class="dot tomorrow"></span> Duty/Leave (Tomorrow)</div>
-        <div class="item"><span class="dot future"></span> Future Duty/Leave</div>
-        <div class="item"><span class="dot past"></span> Past Duty/Leave</div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-box today-legend"></div>Today
+      </div>
+      <div class="legend-item">
+        <div class="legend-box tomorrow-legend"></div>Tomorrow
+      </div>
+      <div class="legend-item">
+        <div class="legend-box future-legend"></div>Other Days
+      </div>
+      <div class="legend-item">
+        <div class="legend-box past-legend"></div>Past Days
       </div>
     </div>
-  </main>
+  </div>
 
-  <!-- ✅ Footer Added Below -->
-  <footer class="footer-bar">
-    POWERED BY : IT CENTRE/BBS/HQ
-  </footer>
+  <div class="footer">POWERED BY: IT CENTRE/BBS/HQ</div>
 
   <script>
-    const tableData = [
-      {
-        officer: "CWE",
-        from: "2025-05-25T00:00",
-        to: "2025-06-02T23:59",
-        outTo: "THAILAND.",
-        type: "Leave",
-        purpose: "Availing Ex.India Leave."
-      },
-      {
-        officer: "PCSC",
-        from: "2025-07-10T09:00",
-        to: "2025-07-12T18:00",
-        outTo: "NDLS",
-        type: "Duty",
-        purpose: "Meeting with Railway Board"
-      },
-      {
-        officer: "CRSE",
-        from: "2025-07-01T00:00",
-        to: "2025-07-04T23:59",
-        outTo: "VSKP",
-        type: "Leave",
-        purpose: "Vacation Leave"
-      },
-      {
-        officer: "CSTE/Project",
-        from: "2025-07-02T00:00",
-        to: "2025-07-02T17:00",
-        outTo: "BBS",
-        type: "Duty",
-        purpose: "Inspn. of Telecom Section"
-      }
-    ];
+    const firebaseConfig = {
+      apiKey: "AIzaSyB8Z1PO89S5RxyQwtzSmF0wBzqXJVsCwQc",
+      authDomain: "erc-appt-and-tour-scheduler.firebaseapp.com",
+      databaseURL: "https://erc-appt-and-tour-scheduler-default-rtdb.asia-southeast1.firebasedatabase.app/",
+      projectId: "erc-appt-and-tour-scheduler",
+      storageBucket: "erc-appt-and-tour-scheduler.appspot.com",
+      messagingSenderId: "607185744541",
+      appId: "1:607185744541:web:7015503e3c6f3385861a74"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    function renderTable(data) {
-      const tbody = document.getElementById("tableBody");
-      tbody.innerHTML = "";
+    function formatDate(dateTimeStr) {
+      if (!dateTimeStr) return '--';
+      const date = new Date(dateTimeStr);
+      return date.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
 
-      const today = new Date().toISOString().split("T")[0];
-      const tomorrow = new Date();
-      tomorrow.setDate(new Date().getDate() + 1);
-      const tmrStr = tomorrow.toISOString().split("T")[0];
+    function loadTours(filterFrom = null, filterTo = null) {
+      const tableBody = document.getElementById('tourList');
+      tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center;"><div class="loading"></div> Loading tours...</td></tr>`;
+      
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      data.forEach(item => {
-        const tr = document.createElement("tr");
-        const fromDate = item.from.split("T")[0];
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
 
-        if (fromDate === today) tr.classList.add("today");
-        else if (fromDate === tmrStr) tr.classList.add("tomorrow");
-        else if (fromDate > today) tr.classList.add("future");
-        else tr.classList.add("past");
+      db.ref('tours').once('value', snapshot => {
+        const todayRows = [], tomorrowRows = [], futureRows = [], pastRows = [];
 
-        tr.innerHTML = `
-          <td>${item.officer}</td>
-          <td>${item.from.replace("T", " ")}</td>
-          <td>${item.to.replace("T", " ")}</td>
-          <td>${item.outTo}</td>
-          <td>${item.type}</td>
-          <td>${item.purpose}</td>
-          <td><button>✏️</button></td>
-        `;
-        tbody.appendChild(tr);
+        snapshot.forEach(child => {
+          const key = child.key;
+          const data = child.val();
+          const tourFrom = new Date(data.from);
+          tourFrom.setHours(0, 0, 0, 0);
+
+          if (filterFrom && new Date(data.from) < new Date(filterFrom)) return;
+          if (filterTo && new Date(data.to) > new Date(filterTo)) return;
+
+          let className = '';
+          if (tourFrom.getTime() === today.getTime()) className = 'today', todayRows.push({ className, data, key });
+          else if (tourFrom.getTime() === tomorrow.getTime()) className = 'tomorrow', tomorrowRows.push({ className, data, key });
+          else if (tourFrom > tomorrow) className = 'future', futureRows.push({ className, data, key });
+          else className = 'past', pastRows.push({ className, data, key });
+        });
+
+        const renderRows = [...todayRows, ...tomorrowRows, ...futureRows, ...pastRows]
+          .map(entry => {
+            const d = entry.data;
+            return `<tr class="${entry.className}">
+              <td>${d.officer || '--'}</td>
+              <td>${formatDate(d.from)}</td>
+              <td>${formatDate(d.to)}</td>
+              <td>${d.outTo || '--'}</td>
+              <td>${d.type === 'duty' ? 'Duty' : d.type === 'leave' ? 'Leave' : '--'}</td>
+              <td>${d.purpose || '--'}</td>
+              <td class="action-cell">
+                <button class="action-btn edit-btn" onclick="goToEdit('${entry.key}')" title="Edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn delete-btn" onclick="deleteTour('${entry.key}')" title="Delete">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>`;
+          }).join('');
+
+        tableBody.innerHTML = renderRows.length ? renderRows : `<tr><td colspan="7" style="text-align: center;">No tours found</td></tr>`;
       });
     }
 
-    function filterData() {
-      const from = new Date(document.getElementById("fromDate").value);
-      const to = new Date(document.getElementById("toDate").value);
-
-      if (!from || !to || isNaN(from) || isNaN(to)) {
-        alert("Please select both dates!");
-        return;
+    function deleteTour(id) {
+      if (confirm('Are you sure you want to delete this tour/leave entry?')) {
+        const btn = event.target.closest('button');
+        btn.innerHTML = '<div class="loading"></div>';
+        btn.disabled = true;
+        
+        db.ref('tours/' + id).remove()
+          .then(() => {
+            loadTours();
+          })
+          .catch(error => {
+            alert('Error deleting tour: ' + error.message);
+            btn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+            btn.disabled = false;
+          });
       }
+    }
 
-      const filtered = tableData.filter(item => {
-        const itemStart = new Date(item.from);
-        const itemEnd = new Date(item.to);
-        return itemEnd >= from && itemStart <= to;
+    function goToForm() {
+      window.location.href = 'addTour.html';
+    }
+
+    function goToEdit(id) {
+      db.ref("tours/" + id).once('value').then(snapshot => {
+        const data = snapshot.val();
+        localStorage.setItem('editTourData', JSON.stringify(data));
+        localStorage.setItem('editTourKey', id);
+        window.location.href = 'addTour.html?edit=true';
       });
-
-      renderTable(filtered);
     }
 
-    function clearFilter() {
-      document.getElementById("fromDate").value = "";
-      document.getElementById("toDate").value = "";
-      renderTable(tableData);
+    function filterByDate() {
+      const from = document.getElementById('fromDate').value;
+      const to = document.getElementById('toDate').value;
+      loadTours(from || null, to || null);
     }
 
-    window.onload = () => renderTable(tableData);
+    function logout() {
+      localStorage.removeItem('isAdmin');
+      window.location.href = 'login1.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTours();
+    });
   </script>
 </body>
 </html>
