@@ -1,140 +1,431 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Appointment</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Appointment - East Coast Railway</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-      margin: 0;
+    :root {
+      --primary-blue: #245269;
+      --dark-blue: #003366;
+      --button-green: #4CAF50;
+      --error-red: #e74c3c;
+      --light-gray: #f7f7f7;
+      --white: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --focus-blue: rgba(36, 82, 105, 0.2);
+      --form-bg: #E3F2DB;
     }
-    .header {
-      background-color: #245269;
-      color: white;
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light-gray);
+      margin: 0;
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
+      background-image: linear-gradient(rgba(247, 247, 247, 0.5)), 
+                      url('https://cag.gov.in/webroot/uploads/FileManager/photo2.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .header {
+      background-color: var(--primary-blue);
+      color: var(--white);
+      display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 20px;
+      padding: 15px 5%;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    .header img {
-      height: 60px;
-    }
+
     .header .title {
-      font-size: 24px;
+      font-size: clamp(18px, 4vw, 24px);
       font-weight: bold;
       text-align: center;
+      margin: 10px 15px;
+      flex: 1;
+      min-width: 200px;
     }
+
+    .header img {
+      height: clamp(50px, 8vw, 60px);
+      filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+    }
+
     .logout-btn {
-      background-color: #4CAF50;
-      color: white;
+      background-color: var(--button-green);
+      color: var(--white);
+      border: none;
       padding: 8px 16px;
-      border: none;
       border-radius: 4px;
       cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
     }
-    .page-title {
-      text-align: center;
-      font-size: 20px;
-      background-color: #005f86;
-      color: white;
-      margin: 20px auto 0;
-      padding: 10px;
-      border-radius: 4px;
-      max-width: 580px;
-      width: 95%;
-      font-weight: 600;
+
+    .logout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
+
     .form-container {
-      background-color: #E3F2DB;
-      max-width: 600px;
-      margin: 0 auto 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
       padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
     }
-    input, textarea {
+
+    .form-box {
+      background: var(--form-bg);
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      box-sizing: border-box;
+      max-width: 600px;
+      padding: 40px 30px;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      animation: fadeIn 0.5s ease-out;
+      border-top: 5px solid var(--primary-blue);
     }
-    label { font-weight: bold; }
-    .row { display: flex; justify-content: space-between; }
-    .row > div { flex: 0 0 48%; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-box h2 {
+      color: var(--dark-blue);
+      margin-bottom: 25px;
+      font-size: clamp(20px, 4vw, 28px);
+      position: relative;
+      display: inline-block;
+    }
+
+    .form-box h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background-color: var(--primary-blue);
+      animation: underlinePulse 2s infinite;
+    }
+
+    @keyframes underlinePulse {
+      0% { width: 50px; }
+      50% { width: 70px; }
+      100% { width: 50px; }
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+      text-align: left;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--dark-blue);
+      font-weight: 600;
+      transform: translateY(0);
+      transition: all 0.3s ease;
+    }
+
+    .input-group.focused label {
+      color: var(--primary-blue);
+      transform: translateY(-5px);
+    }
+
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      transition: all 0.3s;
+      background-color: var(--white);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .input-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus,
+    .input-group select:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px var(--focus-blue);
+      outline: none;
+      transform: translateY(-2px);
+    }
+
+    .input-group input:not(:placeholder-shown),
+    .input-group textarea:not(:placeholder-shown) {
+      background-color: #f8fdfe;
+    }
+
+    .row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .row .input-group {
+      flex: 1;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin: 15px 0;
+    }
+
+    .checkbox-group input {
+      width: auto;
+      margin-right: 10px;
+    }
+
     .btn-container {
-      margin-top: 15px;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
     }
-    button {
-      padding: 10px 20px;
-      margin: 5px;
-      background-color: #31708f;
-      color: white;
+
+    .form-btn {
+      padding: 12px 25px;
+      background-color: var(--primary-blue);
+      color: var(--white);
       border: none;
+      border-radius: 6px;
+      font-weight: bold;
       cursor: pointer;
-      border-radius: 4px;
+      font-size: 16px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
     }
-    button:hover { background-color: #245269; }
-    .footer {
-      background-color: #005f86;
-      color: white;
-      font-size: 12px;
+
+    .form-btn:hover {
+      background-color: #1a3d4d;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-btn:active {
+      transform: translateY(0);
+    }
+
+    .form-btn.secondary {
+      background-color: #6c757d;
+    }
+
+    .form-btn.secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .form-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    .form-btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+
+    .error {
+      color: var(--error-red);
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 20px;
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.3s ease;
+    }
+
+    .error.show {
+      transform: scaleY(1);
+    }
+
+    footer {
+      background-color: var(--dark-blue);
+      color: var(--white);
       text-align: center;
-      padding: 10px 0;
-      margin-top: 40px;
+      padding: 15px;
+      font-size: 14px;
+      margin-top: auto;
+    }
+
+    /* Floating animation for form */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .form-box:hover {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .header {
+        padding: 10px 5%;
+        justify-content: center;
+      }
+      
+      .header .title {
+        min-width: 100%;
+        order: 2;
+        margin: 5px 0 10px;
+      }
+      
+      .form-box {
+        padding: 30px 20px;
+      }
+
+      .row {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-box {
+        padding: 25px 15px;
+      }
+      
+      .form-box h2 {
+        font-size: 22px;
+      }
+      
+      .input-group input,
+      .input-group textarea,
+      .input-group select {
+        padding: 10px 12px;
+      }
+
+      .btn-container {
+        flex-direction: column;
+      }
+
+      .form-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
+  <!-- Check authentication -->
+  <script>
+    if (!localStorage.getItem('isAdmin')) {
+      window.location.href = 'login1.html';
+    }
+  </script>
 
   <div class="header">
-    <img src="logo1.png" />
-    <div class="title">पूर्व तट रेलवे<br>( EAST COAST RAILWAY )</div>
+    <img src="https://www.vhv.rs/dpng/d/398-3987834_indian-railways-logo-hd-png-download.png" alt="Indian Railways Logo">
+    <div class="title">
+      पूर्व तट रेलवे<br>( EAST COAST RAILWAY )
+    </div>
     <button onclick="logout()" class="logout-btn">Logout</button>
   </div>
-
-  <div class="page-title">Appointments & Meetings</div>
-
+  
   <div class="form-container">
-    <form id="meetingForm">
-      <label for="date">Appointment / Meeting Date:</label>
-      <input type="date" id="date" required>
-
-      <label for="time">Appointment / Meeting Time:</label>
-      <input type="time" id="time" required>
-
-      <label for="person">Appointment / Meeting With:</label>
-      <input type="text" id="person" required placeholder="Enter Name">
-
-      <label for="designation">Designation:</label>
-      <input type="text" id="designation" required placeholder="Enter Designation">
-
-      <label for="purpose">Purpose:</label>
-      <textarea id="purpose" required placeholder="Enter Purpose" rows="3"></textarea>
-
-      <div class="row">
-        <div>
-          <label for="venue">Venue:</label>
-          <input type="text" id="venue" required placeholder="Enter Venue">
+    <div class="form-box">
+      <h2>Appointments & Meetings</h2>
+      <form id="meetingForm">
+        <div class="row">
+          <div class="input-group" id="dateGroup">
+            <label for="date">Date</label>
+            <input type="date" id="date" required>
+          </div>
+          <div class="input-group" id="timeGroup">
+            <label for="time">Time</label>
+            <input type="time" id="time" required>
+          </div>
         </div>
-        <div style="margin-top: 32px;">
+
+        <div class="input-group" id="personGroup">
+          <label for="person">With</label>
+          <input type="text" id="person" placeholder="Enter name" required>
+        </div>
+
+        <div class="input-group" id="designationGroup">
+          <label for="designation">Designation</label>
+          <input type="text" id="designation" placeholder="Enter designation" required>
+        </div>
+
+        <div class="input-group" id="purposeGroup">
+          <label for="purpose">Purpose</label>
+          <textarea id="purpose" placeholder="Enter purpose" required></textarea>
+        </div>
+
+        <div class="row">
+          <div class="input-group" id="venueGroup">
+            <label for="venue">Venue</label>
+            <input type="text" id="venue" placeholder="Enter venue" required>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="vip" name="vip">
           <label for="vip">Is VIP?</label>
-          <input type="checkbox" id="vip">
         </div>
-      </div>
 
-      <div class="btn-container">
-        <button type="submit">SUBMIT</button>
-        <button type="reset">CLEAR</button>
-      </div>
-    </form>
+        <div class="btn-container">
+          <button type="submit" class="form-btn">SUBMIT</button>
+          <button type="reset" class="form-btn secondary">CLEAR</button>
+        </div>
+      </form>
+    </div>
   </div>
-
-  <div class="footer">POWERED BY: IT CENTRE/BBS/HQ</div>
+  
+  <footer>
+    POWERED BY: IT CENTRE/BBS/HQ
+  </footer>
 
   <script>
     const firebaseConfig = {
@@ -148,6 +439,30 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
+    // Add focus/blur effects to input groups
+    const inputs = document.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+      const group = input.closest('.input-group');
+      if (!group) return;
+      
+      input.addEventListener('focus', () => {
+        group.classList.add('focused');
+      });
+
+      input.addEventListener('blur', () => {
+        if (!input.value) {
+          group.classList.remove('focused');
+        }
+      });
+    });
+
+    // Pre-focus animation
+    setTimeout(() => {
+      document.querySelectorAll('.input-group').forEach(group => {
+        group.style.transition = 'all 0.5s ease';
+      });
+    }, 1000);
 
     const editId = localStorage.getItem("editId");
     if (editId) {
@@ -182,13 +497,15 @@
       ref.set(appointment).then(() => {
         localStorage.removeItem("editId");
         window.location.href = "apptafteredit.html";
+      }).catch(error => {
+        alert("Error saving data: " + error.message);
       });
     });
 
     function logout() {
-      window.location.href = "apptindex.html";
+      localStorage.removeItem('isAdmin');
+      window.location.href = "login1.html";
     }
   </script>
-
 </body>
 </html>
