@@ -47,13 +47,13 @@ You can access the live version of this project here:
 
 Thanks to these wonderful people:
 
-- [@Sushree Ritureshma Swain](https://github.com/Sushree-ritu23)
-- [@Sugyani Subhalaxmi Mohanty](https://github.com/mohanty-sugyani)
-- [@Raghuveer Mishra](https://github.com/mishra-raghuveer)
-- [@Pradestha Pattnaik](https://github.com/pradestha)
-- [@Priyanka Dash](https://github.com/PriyankaGit656)
-- [@Sriprita Rout](https://github.com/sripritarout)
-- [@Subhashree Mohapatra](https://github.com/sus-2003)
+- [Sushree Ritureshma Swain](https://github.com/Sushree-ritu23)
+- [Sugyani Subhalaxmi Mohanty](https://github.com/mohanty-sugyani)
+- [Raghuveer Mishra](https://github.com/mishra-raghuveer)
+- [Pradestha Pattnaik](https://github.com/pradestha)
+- [Priyanka Dash](https://github.com/PriyankaGit656)
+- [Sriprita Rout](https://github.com/sripritarout)
+- [Subhashree Mohapatra](https://github.com/sus-2003)
 
 
 
