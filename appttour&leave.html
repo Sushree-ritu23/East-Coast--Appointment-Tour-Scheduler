@@ -608,34 +608,16 @@
     }
 
     function deleteTour(id) {
-      if (confirm('Are you sure you want to delete this tour/leave entry?')) {
-        const btn = event.target.closest('button');
-        btn.innerHTML = '<div class="loading"></div>';
-        btn.disabled = true;
-        
-        db.ref('tours/' + id).remove()
-          .then(() => {
-            loadTours();
-          })
-          .catch(error => {
-            alert('Error deleting tour: ' + error.message);
-            btn.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            btn.disabled = false;
-          });
+      window.location.href = 'login1.html';
       }
-    }
+    
 
     function goToForm() {
       window.location.href = 'apptindex.html';
     }
 
     function goToEdit(id) {
-      db.ref("tours/" + id).once('value').then(snapshot => {
-        const data = snapshot.val();
-        localStorage.setItem('editTourData', JSON.stringify(data));
-        localStorage.setItem('editTourKey', id);
-        window.location.href = 'addTour.html?edit=true';
-      });
+     window.location.href = 'login1.html';
     }
 
     function filterByDate() {
@@ -654,3 +636,4 @@
   </script>
 </body>
 </html>
+
